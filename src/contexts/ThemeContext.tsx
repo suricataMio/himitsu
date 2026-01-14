@@ -30,6 +30,32 @@ interface ThemeProviderProps {
   defaultTheme?: Theme;
   /** 是否允许切换主题，默认为 false */
   switchable?: boolean;
+  /** 是否根据时间自动切换主题，默认为 true */
+  autoTheme?: boolean;
+}
+
+function getTimeBasedTheme(now: Date = new Date()): Theme {
+  const hour = now.getHours();
+  return hour >= 6 && hour < 18 ? "light" : "dark";
+}
+
+function getNextThemeChange(now: Date = new Date()): Date {
+  const next = new Date(now);
+  const hour = now.getHours();
+
+  if (hour < 6) {
+    next.setHours(6, 0, 0, 0);
+    return next;
+  }
+
+  if (hour < 18) {
+    next.setHours(18, 0, 0, 0);
+    return next;
+  }
+
+  next.setDate(next.getDate() + 1);
+  next.setHours(6, 0, 0, 0);
+  return next;
 }
 
 /**
@@ -46,14 +72,41 @@ export function ThemeProvider({
   children,
   defaultTheme = "light",
   switchable = false,
+  autoTheme = true,
 }: ThemeProviderProps) {
-  const [theme, setTheme] = React.useState<Theme>(defaultTheme);
+  const [theme, setTheme] = React.useState<Theme>(() =>
+    autoTheme && !switchable ? getTimeBasedTheme() : defaultTheme,
+  );
 
   // 当主题变化时，更新 HTML 根元素的类名
   React.useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme);
   }, [theme]);
+
+  React.useEffect(() => {
+    if (!autoTheme || switchable) {
+      return undefined;
+    }
+
+    let timeoutId: number | undefined;
+
+    const scheduleNext = () => {
+      setTheme(getTimeBasedTheme());
+      const now = new Date();
+      const nextChange = getNextThemeChange(now);
+      const delay = Math.max(nextChange.getTime() - now.getTime(), 0);
+      timeoutId = window.setTimeout(scheduleNext, delay);
+    };
+
+    scheduleNext();
+
+    return () => {
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [autoTheme, switchable]);
 
   /**
    * 切换主题
