@@ -16,6 +16,7 @@ import catBlueRun from "@/assets/cat-blue-run.png";
 import catWhiteRun from "@/assets/cat-white-run.png";
 
 import { CountdownCard } from "@/components/CountdownCard";
+import { DailyStatus } from "@/components/DailyStatus";
 import { EventList } from "@/components/EventList";
 
 import { MemberProfile } from "@/components/MemberProfile";
@@ -192,6 +193,16 @@ export default function Home() {
                 <EventList />
             </div>
           </motion.div>
+
+          {/* 工作日状态卡片 */}
+          <motion.section
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <DailyStatus />
+          </motion.section>
 
           {/* 公会成员名录区域 */}
           <motion.section
