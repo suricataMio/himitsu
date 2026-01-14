@@ -110,8 +110,16 @@ export default function Home() {
       
       {/* 装饰性背景元素 - 渐变光晕效果 */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0 opacity-50">
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-[100px]" />
+          <motion.div
+            className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px]"
+            animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.6, 0.35] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-[100px]"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.55, 0.3] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+          />
       </div>
 
       {/* 主内容滚动区域 */}
@@ -119,20 +127,35 @@ export default function Home() {
         <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
           
           {/* 页面头部 - 标题和副标题 */}
-          <header className="flex flex-col items-center text-center space-y-2 pt-4">
-            <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-2 hover:scale-110 transition-transform cursor-pointer">
+          <motion.header
+            className="flex flex-col items-center text-center space-y-2 pt-4"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <motion.div
+              className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-2 hover:scale-110 transition-transform cursor-pointer"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
                 <Heart className="text-rose-400 fill-rose-400 w-6 h-6 animate-pulse" />
-            </div>
+            </motion.div>
             <h1 className="text-4xl md:text-5xl font-black text-foreground font-display tracking-tight drop-shadow-sm">
               欢迎回家
             </h1>
             <p className="text-primary font-bold text-lg">
               Aokiba & 晓倩 的秘密基地
             </p>
-          </header>
+          </motion.header>
 
           {/* Hero 区域 - 主视觉图片 */}
-          <section className="relative rounded-3xl overflow-hidden shadow-lg aspect-[16/9] md:aspect-[21/9] group ring-4 ring-white/50">
+          <motion.section
+            className="relative rounded-3xl overflow-hidden shadow-lg aspect-[16/9] md:aspect-[21/9] group ring-4 ring-white/50"
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <img 
                 src={heroImage} 
                 alt="Secret Base" 
@@ -149,10 +172,16 @@ export default function Home() {
                     <p className="text-white/90 text-sm mt-1">公会成员: Aokiba, 晓倩, 甜心(Mage), 蛋糕(Warrior)</p>
                 </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* 核心信息网格布局 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             {/* 左侧：羁绊计时器卡片 */}
             <div className="md:col-span-1 h-full">
                 <CountdownCard />
@@ -162,10 +191,16 @@ export default function Home() {
             <div className="md:col-span-2">
                 <EventList />
             </div>
-          </div>
+          </motion.div>
 
           {/* 公会成员名录区域 */}
-          <section className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50 relative overflow-hidden">
+          <motion.section
+            className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50 relative overflow-hidden"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             {/* 装饰性城堡图标 */}
             <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🏰</div>
             <h3 className="text-center text-lg font-bold text-foreground/80 mb-8 font-display">公会成员名录</h3>
@@ -196,7 +231,7 @@ export default function Home() {
                     color="bg-orange-100" 
                 />
             </div>
-          </section>
+          </motion.section>
 
           {/* 页脚 */}
           <footer className="text-center py-8 text-sm text-muted-foreground/60">
