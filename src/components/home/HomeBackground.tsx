@@ -1,3 +1,13 @@
+/**
+ * 首页装饰性背景组件
+ *
+ * 创建柔和的渐变光晕背景效果：
+ * - 左上角粉橙色光晕，带呼吸动画
+ * - 右下角蓝紫色光晕，带呼吸动画
+ *
+ * 使用 fixed 定位覆盖全屏，z-index 为 0 不影响内容交互
+ * pointer-events-none 确保不拦截点击事件
+ */
 import { motion } from "framer-motion";
 
 export function HomeBackground() {

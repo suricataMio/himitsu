@@ -1,3 +1,13 @@
+/**
+ * 首页头部组件
+ *
+ * 显示欢迎语和网站标题：
+ * - 跳动的爱心图标
+ * - "欢迎回家" 主标题
+ * - "Aokiba & 晓倩 的秘密基地" 副标题
+ *
+ * 使用 framer-motion 实现入场动画和悬浮效果
+ */
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 

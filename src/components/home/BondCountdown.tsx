@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDaysTogether } from "@/lib/events";
 import { Heart } from "lucide-react";
 
-export function CountdownCard() {
+export function BondCountdown() {
   // 计算在一起的天数
   const days = getDaysTogether();
 

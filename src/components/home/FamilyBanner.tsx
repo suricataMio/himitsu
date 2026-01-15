@@ -1,9 +1,20 @@
+/**
+ * 家庭主横幅组件
+ *
+ * 展示家庭主题大图和基本信息：
+ * - 全宽背景图片，支持悬停放大效果
+ * - 底部渐变遮罩显示公会信息
+ * - 等级徽章（根据在一起的年数计算）
+ * - 公会成员列表
+ *
+ * 宽高比：移动端 16:9，桌面端 21:9
+ */
 import { motion } from "framer-motion";
 
 import heroImage from "@/assets/hero-anime.jpeg";
 import { getDaysTogether } from "@/lib/events";
 
-export function HeroSection() {
+export function FamilyBanner() {
   return (
     <motion.section
       className="relative rounded-3xl overflow-hidden shadow-lg aspect-[16/9] md:aspect-[21/9] group ring-4 ring-white/50"

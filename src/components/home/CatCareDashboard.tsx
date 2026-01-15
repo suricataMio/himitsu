@@ -1,8 +1,18 @@
+/**
+ * 铲屎官仪表盘组件
+ *
+ * 综合展示猫咪健康管理信息：
+ * - 体重记录卡片（WeightRecordCard）
+ * - 疫苗和驱虫提醒概览
+ * - 护理清单（称重、营养膏、指甲修剪）
+ * - 甜心 & 蛋糕体重变化曲线图（使用 Recharts）
+ * - 每日状态卡片（DailyStatus）：根据时间显示人员和猫咪状态
+ */
 import { motion } from "framer-motion";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { DailyStatus } from "@/components/DailyStatus";
-import { WeightRecordCard } from "@/components/WeightRecordCard";
+import { CatWeightCard } from "@/components/home/CatWeightCard";
+import { DailyStatus } from "@/components/home/DailyStatus";
 import {
   ChartContainer,
   ChartLegend,
@@ -31,7 +41,7 @@ const weightChartConfig = {
   },
 };
 
-export function CaretakerDashboard() {
+export function CatCareDashboard() {
   return (
     <motion.section
       className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50 relative overflow-hidden"
@@ -40,7 +50,7 @@ export function CaretakerDashboard() {
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <WeightRecordCard />
+      <CatWeightCard />
       <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🐱</div>
       <div className="flex flex-col gap-2 text-center md:text-left md:flex-row md:items-end md:justify-between">
         <div>

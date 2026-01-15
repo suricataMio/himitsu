@@ -1,3 +1,11 @@
+/**
+ * 猫咪体重记录卡片组件
+ *
+ * 显示甜心最近一次的体重记录：
+ * - 记录日期
+ * - 体重数值（斤）
+ * - 状态说明
+ */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
@@ -9,7 +17,7 @@ const latestSweetieWeight = {
   unit: "斤",
 };
 
-export function WeightRecordCard() {
+export function CatWeightCard() {
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-secondary/20 shadow-sm">
       <CardHeader>
