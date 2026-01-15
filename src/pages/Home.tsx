@@ -20,6 +20,7 @@ import { DailyStatus } from "@/components/DailyStatus";
 import { EventList } from "@/components/EventList";
 
 import { MemberProfile } from "@/components/MemberProfile";
+import { WeightRecordCard } from "@/components/WeightRecordCard";
 import {
   ChartContainer,
   ChartLegend,
@@ -222,6 +223,9 @@ export default function Home() {
             </div>
           </motion.div>
 
+          {/* 甜心体重记录 */}
+          <motion.section
+            className="w-full"
           {/* 铲屎官仪表盘 */}
           <motion.section
             className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50 relative overflow-hidden"
@@ -232,6 +236,7 @@ export default function Home() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
+            <WeightRecordCard />
             <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🐱</div>
             <div className="flex flex-col gap-2 text-center md:text-left md:flex-row md:items-end md:justify-between">
               <div>
