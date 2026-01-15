@@ -5,6 +5,16 @@
  * 支持自定义背景色和悬停动画效果
  */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+
+type StatusTone = "ok" | "soon" | "due";
+
+interface StatusItem {
+  label: string;
+  value: string;
+  progress: number;
+  tone: StatusTone;
+}
 
 /** 成员档案组件属性 */
 interface MemberProps {
@@ -16,6 +26,10 @@ interface MemberProps {
   imageSrc: string;
   /** 背景颜色类名（可选，默认为主题色） */
   color?: string;
+  /** 猫咪状态栏信息（可选） */
+  statusItems?: StatusItem[];
+  /** 卡片自定义样式 */
+  className?: string;
 }
 
 /**
@@ -27,9 +41,31 @@ interface MemberProps {
  * @param props.imageSrc - 头像图片
  * @param props.color - 背景色 Tailwind 类名
  */
-export function MemberProfile({ name, role, imageSrc, color = "bg-primary/20" }: MemberProps) {
+const statusToneStyles: Record<StatusTone, { badge: string; bar: string }> = {
+  ok: {
+    badge: "bg-emerald-100 text-emerald-700",
+    bar: "bg-emerald-400",
+  },
+  soon: {
+    badge: "bg-amber-100 text-amber-700",
+    bar: "bg-amber-400",
+  },
+  due: {
+    badge: "bg-rose-100 text-rose-700",
+    bar: "bg-rose-400",
+  },
+};
+
+export function MemberProfile({
+  name,
+  role,
+  imageSrc,
+  color = "bg-primary/20",
+  statusItems,
+  className,
+}: MemberProps) {
   return (
-    <div className="flex flex-col items-center gap-3 group cursor-pointer">
+    <div className={cn("flex flex-col items-center gap-3 group cursor-pointer", className)}>
       {/* 头像容器 - 带悬停放大旋转效果 */}
       <div className={`p-1.5 rounded-full ${color} transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg ring-4 ring-white/50`}>
         <Avatar className="w-24 h-24 border-4 border-white shadow-sm">
@@ -43,6 +79,35 @@ export function MemberProfile({ name, role, imageSrc, color = "bg-primary/20" }:
         <h3 className="font-bold text-foreground font-display text-base group-hover:text-primary transition-colors">{name}</h3>
         <p className="text-xs text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-white/50 inline-block">{role}</p>
       </div>
+      {statusItems && statusItems.length > 0 ? (
+        <div className="w-full max-w-[200px] rounded-2xl border border-white/80 bg-white/70 px-3 py-2 shadow-sm">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground">
+            <span>状态栏</span>
+            <span>提醒</span>
+          </div>
+          <div className="mt-2 space-y-2">
+            {statusItems.map((item) => {
+              const tone = statusToneStyles[item.tone];
+              return (
+                <div key={`${name}-${item.label}`} className="space-y-1">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-foreground/80">{item.label}</span>
+                    <span className={cn("rounded-full px-2 py-0.5 font-semibold", tone.badge)}>
+                      {item.value}
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
+                    <div
+                      className={cn("h-full rounded-full transition-all", tone.bar)}
+                      style={{ width: `${Math.min(Math.max(item.progress, 0), 100)}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
