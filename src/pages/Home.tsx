@@ -19,6 +19,7 @@ import { CountdownCard } from "@/components/CountdownCard";
 import { EventList } from "@/components/EventList";
 
 import { MemberProfile } from "@/components/MemberProfile";
+import { WeightRecordCard } from "@/components/WeightRecordCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Heart } from "lucide-react";
 import { getDaysTogether } from "@/lib/events";
@@ -192,6 +193,17 @@ export default function Home() {
                 <EventList />
             </div>
           </motion.div>
+
+          {/* 甜心体重记录 */}
+          <motion.section
+            className="w-full"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <WeightRecordCard />
+          </motion.section>
 
           {/* 公会成员名录区域 */}
           <motion.section
