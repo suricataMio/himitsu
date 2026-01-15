@@ -1,9 +1,20 @@
+/**
+ * 公会成员名录组件
+ *
+ * 展示家庭所有成员信息：
+ * - Aokiba（男主人）
+ * - 晓倩（女主人）
+ * - 甜心（蓝猫）- 包含疫苗和驱虫状态
+ * - 蛋糕（白猫）- 包含疫苗和驱虫状态
+ *
+ * 每个成员使用 MemberProfile 子组件渲染头像、名称和状态信息
+ */
 import { motion } from "framer-motion";
 
 import avatarBlue from "@/assets/avatar-cat-blue.jpeg";
 import avatarWhite from "@/assets/avatar-cat-white.jpeg";
 import avatarCouple from "@/assets/avatar-couple.jpeg";
-import { MemberProfile } from "@/components/MemberProfile";
+import { MemberProfile } from "@/components/home/MemberProfile";
 
 export function MemberRoster() {
   return (
