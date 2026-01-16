@@ -14,6 +14,8 @@ import { motion } from "framer-motion";
 import avatarBlue from "@/assets/avatar-cat-blue.jpeg";
 import avatarWhite from "@/assets/avatar-cat-white.jpeg";
 import avatarCouple from "@/assets/avatar-couple.jpeg";
+import { Link } from "wouter";
+
 import { MemberProfile } from "@/components/home/MemberProfile";
 
 export function MemberRoster() {
@@ -30,50 +32,30 @@ export function MemberRoster() {
         公会成员名录
       </h3>
       <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-        <MemberProfile name="Aokiba" role="男主人" imageSrc={avatarCouple} color="bg-blue-100" />
-        <MemberProfile name="晓倩" role="女主人" imageSrc={avatarCouple} color="bg-pink-100" />
-        <MemberProfile
-          name="甜心"
-          role="可爱的蓝猫"
-          imageSrc={avatarBlue}
-          color="bg-indigo-100"
-          className="w-48"
-          statusItems={[
-            {
-              label: "疫苗",
-              value: "剩余 18 天",
-              progress: 65,
-              tone: "soon",
-            },
-            {
-              label: "驱虫",
-              value: "剩余 32 天",
-              progress: 40,
-              tone: "ok",
-            },
-          ]}
-        />
-        <MemberProfile
-          name="蛋糕"
-          role="粘人的小白"
-          imageSrc={avatarWhite}
-          color="bg-orange-100"
-          className="w-48"
-          statusItems={[
-            {
-              label: "疫苗",
-              value: "剩余 7 天",
-              progress: 85,
-              tone: "due",
-            },
-            {
-              label: "驱虫",
-              value: "剩余 21 天",
-              progress: 55,
-              tone: "soon",
-            },
-          ]}
-        />
+        <Link href="/member/aokiba" className="block">
+          <MemberProfile name="Aokiba" role="男主人" imageSrc={avatarCouple} color="bg-blue-100" />
+        </Link>
+        <Link href="/member/xiaoqian" className="block">
+          <MemberProfile name="晓倩" role="女主人" imageSrc={avatarCouple} color="bg-pink-100" />
+        </Link>
+        <Link href="/cat/sweet" className="block">
+          <MemberProfile
+            name="甜心"
+            role="可爱的蓝猫"
+            imageSrc={avatarBlue}
+            color="bg-indigo-100"
+            className="w-48"
+          />
+        </Link>
+        <Link href="/cat/cake" className="block">
+          <MemberProfile
+            name="蛋糕"
+            role="粘人的小白"
+            imageSrc={avatarWhite}
+            color="bg-orange-100"
+            className="w-48"
+          />
+        </Link>
       </div>
     </motion.section>
   );

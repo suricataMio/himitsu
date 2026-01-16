@@ -21,6 +21,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
+export type CatId = "sweet" | "cake";
+
 const weightData = [
   { month: "2月", sweet: 4.1, cake: 4.7 },
   { month: "3月", sweet: 4.2, cake: 4.6 },
@@ -30,18 +32,101 @@ const weightData = [
   { month: "7月", sweet: 4.4, cake: 4.5 },
 ];
 
-const weightChartConfig = {
+type StatusTone = "ok" | "soon" | "due";
+
+export const catProfiles: Record<
+  CatId,
+  {
+    name: string;
+    lineKey: CatId;
+    chartColor: string;
+    latestWeight: { date: Date; value: string; unit: string };
+    statusItems: {
+      label: string;
+      value: string;
+      progress: number;
+      tone: StatusTone;
+    }[];
+  }
+> = {
   sweet: {
-    label: "甜心",
-    color: "var(--chart-1)",
+    name: "甜心",
+    lineKey: "sweet",
+    chartColor: "var(--chart-1)",
+    latestWeight: {
+      date: new Date(),
+      value: "7.8",
+      unit: "斤",
+    },
+    statusItems: [
+      {
+        label: "疫苗",
+        value: "剩余 18 天",
+        progress: 65,
+        tone: "soon",
+      },
+      {
+        label: "驱虫",
+        value: "剩余 32 天",
+        progress: 40,
+        tone: "ok",
+      },
+    ],
   },
   cake: {
-    label: "蛋糕",
-    color: "var(--chart-2)",
+    name: "蛋糕",
+    lineKey: "cake",
+    chartColor: "var(--chart-2)",
+    latestWeight: {
+      date: new Date(),
+      value: "7.2",
+      unit: "斤",
+    },
+    statusItems: [
+      {
+        label: "疫苗",
+        value: "剩余 7 天",
+        progress: 85,
+        tone: "due",
+      },
+      {
+        label: "驱虫",
+        value: "剩余 21 天",
+        progress: 55,
+        tone: "soon",
+      },
+    ],
   },
 };
 
-export function CatCareDashboard() {
+const statusToneStyles: Record<StatusTone, { badge: string; bar: string }> = {
+  ok: {
+    badge: "bg-emerald-100 text-emerald-700",
+    bar: "bg-emerald-400",
+  },
+  soon: {
+    badge: "bg-amber-100 text-amber-700",
+    bar: "bg-amber-400",
+  },
+  due: {
+    badge: "bg-rose-100 text-rose-700",
+    bar: "bg-rose-400",
+  },
+};
+
+interface CatCareDashboardProps {
+  catId?: CatId;
+}
+
+export function CatCareDashboard({ catId = "sweet" }: CatCareDashboardProps) {
+  const cat = catProfiles[catId] ?? catProfiles.sweet;
+  const weightChartConfig = {
+    [cat.lineKey]: {
+      label: cat.name,
+      color: cat.chartColor,
+    },
+  };
+
   return (
     <motion.section
       className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50 relative overflow-hidden"
@@ -50,71 +135,46 @@ export function CatCareDashboard() {
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <CatWeightCard />
+      <CatWeightCard name={cat.name} latestWeight={cat.latestWeight} />
       <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🐱</div>
       <div className="flex flex-col gap-2 text-center md:text-left md:flex-row md:items-end md:justify-between">
         <div>
-          <h3 className="text-lg font-bold text-foreground/80 font-display">🐱 铲屎官仪表盘</h3>
+          <h3 className="text-lg font-bold text-foreground/80 font-display">
+            🐱 {cat.name}仪表盘
+          </h3>
           <p className="text-sm text-muted-foreground">
-            疫苗与驱虫不再错过，甜心与蛋糕都在被认真照顾。
+            记录体重趋势与日常状态，守护每一次小变化。
           </p>
         </div>
         <div className="text-xs text-muted-foreground">数据更新：本周</div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-4">
-          <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
-            <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-              <span>提醒概览</span>
-              <span className="text-xs font-medium text-muted-foreground">（最近30天）</span>
-            </h4>
-            <ul className="mt-3 space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-foreground">甜心 · 三联疫苗</p>
-                  <p className="text-xs">剩余 18 天</p>
+        <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
+          <h4 className="text-sm font-bold text-foreground flex items-center justify-between">
+            <span>状态栏</span>
+            <span className="text-xs text-muted-foreground">提醒</span>
+          </h4>
+          <div className="mt-3 space-y-3 text-sm text-muted-foreground">
+            {cat.statusItems.map((item) => {
+              const tone = statusToneStyles[item.tone];
+              return (
+                <div key={`${cat.name}-${item.label}`} className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-foreground/80">{item.label}</span>
+                    <span className={`rounded-full px-2 py-0.5 font-semibold ${tone.badge}`}>
+                      {item.value}
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
+                    <div
+                      className={`h-full rounded-full ${tone.bar}`}
+                      style={{ width: `${Math.min(Math.max(item.progress, 0), 100)}%` }}
+                    />
+                  </div>
                 </div>
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
-                  即将到期
-                </span>
-              </li>
-              <li className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-foreground">蛋糕 · 驱虫</p>
-                  <p className="text-xs">剩余 7 天</p>
-                </div>
-                <span className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700">
-                  需要关注
-                </span>
-              </li>
-              <li className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-foreground">甜心 · 口服驱虫</p>
-                  <p className="text-xs">剩余 32 天</p>
-                </div>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
-                  状态良好
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
-            <h4 className="text-sm font-bold text-foreground">护理清单</h4>
-            <div className="mt-3 space-y-2 text-xs text-muted-foreground">
-              <div className="flex items-center justify-between">
-                <span>本周称重</span>
-                <span className="font-semibold text-foreground">已完成</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>补充营养膏</span>
-                <span className="font-semibold text-foreground">进行中</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>指甲修剪提醒</span>
-                <span className="font-semibold text-foreground">2 天后</span>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
 
@@ -122,7 +182,7 @@ export function CatCareDashboard() {
           <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <h4 className="text-sm font-bold text-foreground">甜心 & 蛋糕体重变化曲线</h4>
+                <h4 className="text-sm font-bold text-foreground">{cat.name}体重变化曲线</h4>
                 <p className="text-xs text-muted-foreground">单位：kg，最近半年记录</p>
               </div>
               <div className="text-xs text-muted-foreground">趋势平稳更安心</div>
@@ -139,18 +199,7 @@ export function CatCareDashboard() {
                 />
                 <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Line
-                  dataKey="sweet"
-                  stroke="var(--color-sweet)"
-                  strokeWidth={3}
-                  dot={false}
-                />
-                <Line
-                  dataKey="cake"
-                  stroke="var(--color-cake)"
-                  strokeWidth={3}
-                  dot={false}
-                />
+                <Line dataKey={cat.lineKey} stroke={`var(--color-${cat.lineKey})`} strokeWidth={3} dot={false} />
               </LineChart>
             </ChartContainer>
           </div>

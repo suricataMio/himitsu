@@ -11,7 +11,6 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { BondAndEvents } from "@/components/home/BondAndEvents";
-import { CatCareDashboard } from "@/components/home/CatCareDashboard";
 import { FamilyBanner } from "@/components/home/FamilyBanner";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { HomeFooter } from "@/components/home/HomeFooter";
@@ -38,7 +37,6 @@ export default function Home() {
           <HomeHeader />
           <FamilyBanner />
           <BondAndEvents />
-          <CatCareDashboard />
           <MemberRoster />
           <HomeFooter />
         </div>

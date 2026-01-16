@@ -13,7 +13,9 @@ import { Router, Route, Switch } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import CatProfile from "@/pages/CatProfile";
 import Home from "@/pages/Home";
+import MemberProfilePage from "@/pages/MemberProfilePage";
 import NotFound from "@/pages/NotFound";
 
 /**
@@ -27,6 +29,8 @@ function AppRouter() {
     <Router hook={useHashLocation}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/cat/:catId" component={CatProfile} />
+        <Route path="/member/:memberId" component={MemberProfilePage} />
         <Route component={NotFound} />
       </Switch>
     </Router>
