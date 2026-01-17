@@ -10,6 +10,9 @@
  */
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
+import { Link } from "wouter";
+
+import { Button } from "@/components/ui/button";
 
 export function HomeHeader() {
   return (
@@ -30,6 +33,9 @@ export function HomeHeader() {
         欢迎回家
       </h1>
       <p className="text-primary font-bold text-lg">Aokiba & 晓倩 的秘密基地</p>
+      <Button asChild size="sm" className="mt-4">
+        <Link href="/anniversary">纪念人</Link>
+      </Button>
     </motion.header>
   );
 }
