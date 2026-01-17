@@ -1,12 +1,13 @@
 /**
  * 纪念日详情页
  *
- * 从首页的“纪念人”入口进入，展示纪念日相关信息。
+ * 从首页的“纪念日”入口进入，展示纪念日相关信息。
  */
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 
 import { AnniversaryDetails } from "@/components/anniversary/AnniversaryDetails";
+import { BondAndEvents } from "@/components/home/BondAndEvents";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -33,6 +34,7 @@ export default function AnniversaryPage() {
             </p>
           </section>
 
+          <BondAndEvents />
           <AnniversaryDetails />
         </div>
       </ScrollArea>

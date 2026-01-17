@@ -30,6 +30,8 @@ interface MemberProps {
   statusItems?: StatusItem[];
   /** 卡片自定义样式 */
   className?: string;
+  /** 紧凑尺寸 */
+  size?: "default" | "compact";
 }
 
 /**
@@ -63,12 +65,27 @@ export function MemberProfile({
   color = "bg-primary/20",
   statusItems,
   className,
+  size = "default",
 }: MemberProps) {
+  const isCompact = size === "compact";
+
   return (
-    <div className={cn("flex flex-col items-center gap-3 group cursor-pointer", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center group cursor-pointer",
+        isCompact ? "gap-2" : "gap-3",
+        className
+      )}
+    >
       {/* 头像容器 - 带悬停放大旋转效果 */}
-      <div className={`p-1.5 rounded-full ${color} transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg ring-4 ring-white/50`}>
-        <Avatar className="w-24 h-24 border-4 border-white shadow-sm">
+      <div
+        className={cn(
+          "rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg ring-4 ring-white/50",
+          isCompact ? "p-1" : "p-1.5",
+          color
+        )}
+      >
+        <Avatar className={cn("border-4 border-white shadow-sm", isCompact ? "w-16 h-16" : "w-24 h-24")}>
           <AvatarImage src={imageSrc} alt={name} className="object-cover" />
           {/* 头像加载失败时的占位符 */}
           <AvatarFallback className="bg-white text-muted-foreground font-bold">{name[0]}</AvatarFallback>
@@ -76,8 +93,19 @@ export function MemberProfile({
       </div>
       {/* 成员信息 */}
       <div className="text-center space-y-0.5">
-        <h3 className="font-bold text-foreground font-display text-base group-hover:text-primary transition-colors">{name}</h3>
-        <p className="text-xs text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-white/50 inline-block">{role}</p>
+        <h3
+          className={cn(
+            "font-bold text-foreground font-display group-hover:text-primary transition-colors",
+            isCompact ? "text-sm" : "text-base"
+          )}
+        >
+          {name}
+        </h3>
+        {role ? (
+          <p className="text-xs text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-white/50 inline-block">
+            {role}
+          </p>
+        ) : null}
       </div>
       {statusItems && statusItems.length > 0 ? (
         <div className="w-full max-w-[200px] rounded-2xl border border-white/80 bg-white/70 px-3 py-2 shadow-sm">

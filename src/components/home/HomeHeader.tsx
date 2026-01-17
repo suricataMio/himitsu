@@ -17,13 +17,13 @@ import { Button } from "@/components/ui/button";
 export function HomeHeader() {
   return (
     <motion.header
-      className="flex flex-col items-center text-center space-y-2 pt-4"
+      className="flex flex-col items-center text-center gap-3 pt-3 md:pt-6"
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
-        className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-2 hover:scale-110 transition-transform cursor-pointer"
+        className="inline-flex items-center justify-center p-3 bg-white/90 rounded-full shadow-sm ring-4 ring-white/60 hover:scale-110 transition-transform cursor-pointer"
         animate={{ y: [0, -4, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -32,9 +32,8 @@ export function HomeHeader() {
       <h1 className="text-4xl md:text-5xl font-black text-foreground font-display tracking-tight drop-shadow-sm">
         欢迎回家
       </h1>
-      <p className="text-primary font-bold text-lg">Aokiba & 晓倩 的秘密基地</p>
-      <Button asChild size="sm" className="mt-4">
-        <Link href="/anniversary">纪念人</Link>
+      <Button asChild size="sm" className="mt-1 rounded-full px-6 shadow-sm">
+        <Link href="/anniversary">纪念日</Link>
       </Button>
     </motion.header>
   );

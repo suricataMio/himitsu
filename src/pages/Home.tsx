@@ -10,13 +10,14 @@
  */
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { BondAndEvents } from "@/components/home/BondAndEvents";
 import { FamilyBanner } from "@/components/home/FamilyBanner";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { HomeFooter } from "@/components/home/HomeFooter";
-import { HomeHeader } from "@/components/home/HomeHeader";
 import { MemberRoster } from "@/components/home/MemberRoster";
 import { WelcomeAnimation } from "@/components/home/WelcomeAnimation";
+import { Link } from "wouter";
+
+import { Button } from "@/components/ui/button";
 
 /**
  * 首页主组件
@@ -32,12 +33,16 @@ export default function Home() {
 
       {/* 主内容滚动区域 */}
       <ScrollArea className="h-screen w-full relative z-10">
-        <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
-
-          <HomeHeader />
+        <div className="w-full max-w-none mx-auto px-4 md:px-10 py-8 space-y-10">
+          <div className="bg-white/70 backdrop-blur-sm border border-white/60 rounded-3xl px-6 py-4 shadow-sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <MemberRoster variant="compact" />
+              <Button asChild size="sm" className="rounded-full px-6 shadow-sm self-start md:self-auto">
+                <Link href="/anniversary">纪念日</Link>
+              </Button>
+            </div>
+          </div>
           <FamilyBanner />
-          <BondAndEvents />
-          <MemberRoster />
           <HomeFooter />
         </div>
       </ScrollArea>

@@ -18,11 +18,12 @@
  * 状态每分钟自动刷新一次
  */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import avatarBlue from "@/assets/avatar-cat-blue.jpeg";
-import avatarWhite from "@/assets/avatar-cat-white.jpeg";
+import avatarCouple from "@/assets/avatar-couple.jpeg";
 import { Clock, PawPrint, PhoneCall } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 
 
@@ -58,8 +59,18 @@ function getMinutes(date: Date) {
   return date.getHours() * 60 + date.getMinutes();
 }
 
-export function DailyStatus() {
+type DailyStatusVariant = "work" | "cat" | "both";
+
+interface DailyStatusProps {
+  variant?: DailyStatusVariant;
+}
+
+export function DailyStatus({ variant = "both" }: DailyStatusProps) {
   const [now, setNow] = useState(() => new Date());
+  const showWork = variant !== "cat";
+  const showCat = variant !== "work";
+  const headerTitle =
+    variant === "work" ? "工作状态" : variant === "cat" ? "猫咪状态" : "每日状态";
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60 * 1000);
@@ -79,13 +90,13 @@ export function DailyStatus() {
           {
             key: "xiaoqian",
             name: "晓倩",
-            avatar: avatarWhite,
+            avatar: avatarCouple,
             accent: "text-pink-500",
           },
           {
             key: "me",
             name: "我",
-            avatar: avatarBlue,
+            avatar: avatarCouple,
             accent: "text-blue-500",
           },
         ],
@@ -101,14 +112,14 @@ export function DailyStatus() {
       {
         key: "xiaoqian",
         name: "晓倩",
-        avatar: avatarWhite,
+        avatar: avatarCouple,
         isWorking: xiaoqianWorking,
         accent: "text-pink-500",
       },
       {
         key: "me",
         name: "我",
-        avatar: avatarBlue,
+        avatar: avatarCouple,
         isWorking: meWorking,
         accent: "text-blue-500",
       },
@@ -167,217 +178,228 @@ export function DailyStatus() {
     <Card className="bg-white/80 backdrop-blur-sm border-secondary/20 shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg font-display flex items-center gap-2">
-          <Clock className="h-5 w-5 text-primary" />
-          工作日状态
+          {variant === "cat" ? (
+            <PawPrint className="h-5 w-5 text-primary" />
+          ) : (
+            <Clock className="h-5 w-5 text-primary" />
+          )}
+          {headerTitle}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className={`mb-4 rounded-2xl border px-4 py-3 shadow-sm ${workStatus.isWeekend
-          ? "border-pink-200 bg-gradient-to-r from-pink-50/80 to-orange-50/80"
-          : "border-secondary/20 bg-white/70"
-          }`}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-foreground/90">
-                {workStatus.isWeekend ? "🏠 周末时光" : "当前上班状态"}
-              </p>
-              <p className="text-xs text-muted-foreground">{workStatus.statusText}</p>
-            </div>
-            <div className="flex items-center gap-4">
-              {/* 周末模式：显示大家都在家的温馨动画 */}
-              {workStatus.isWeekend && workStatus.homeMembers && (
-                <div className="flex items-center gap-3">
-                  {workStatus.homeMembers.map((member, index) => (
+        {showWork ? (
+          <div
+            className={cn(
+              "rounded-2xl border px-4 py-3 shadow-sm",
+              workStatus.isWeekend
+                ? "border-pink-200 bg-gradient-to-r from-pink-50/80 to-orange-50/80"
+                : "border-secondary/20 bg-white/70",
+              showCat ? "mb-4" : null
+            )}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground/90">
+                  {workStatus.isWeekend ? "🏠 周末时光" : "当前上班状态"}
+                </p>
+                <p className="text-xs text-muted-foreground">{workStatus.statusText}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                {/* 周末模式：显示大家都在家的温馨动画 */}
+                {workStatus.isWeekend && workStatus.homeMembers && (
+                  <div className="flex items-center gap-3">
+                    {workStatus.homeMembers.map((member, index) => (
+                      <motion.div
+                        key={member.key}
+                        className="relative flex flex-col items-center"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: index * 0.3,
+                        }}
+                      >
+                        <motion.div
+                          className="relative"
+                          animate={{ y: [0, -3, 0] }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.2,
+                          }}
+                        >
+                          <img
+                            src={member.avatar}
+                            alt={`${member.name} at home`}
+                            className="h-12 w-12 rounded-full object-cover shadow-md ring-2 ring-pink-200"
+                          />
+                          <motion.span
+                            className="absolute -right-1 -top-1 text-sm"
+                            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                          >
+                            💕
+                          </motion.span>
+                        </motion.div>
+                        <span className="mt-1 text-[10px] font-medium text-foreground/80">
+                          {member.name}
+                        </span>
+                      </motion.div>
+                    ))}
+                    <motion.div
+                      className="flex flex-col items-center gap-1"
+                      animate={{ y: [0, -4, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <motion.span
+                        className="text-2xl"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        🏡
+                      </motion.span>
+                      <span className="text-[10px] text-pink-500 font-medium">在家</span>
+                    </motion.div>
+                  </div>
+                )}
+
+                {/* 工作日模式：上班中的成员 */}
+                {!workStatus.isWeekend && workStatus.activeWorkers.length > 0 &&
+                  workStatus.activeWorkers.map((worker, index) => (
+                    <motion.div
+                      key={worker.key}
+                      className="relative flex flex-col items-center"
+                      animate={{ y: [0, -6, 0] }}
+                      transition={{
+                        duration: 1.8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: index * 0.2,
+                      }}
+                    >
+                      <img
+                        src={worker.avatar}
+                        alt={`${worker.name} working`}
+                        className="h-12 w-12 rounded-full object-cover shadow-md"
+                      />
+                      <span className="mt-1 text-[10px] font-medium text-foreground/80">
+                        {worker.name}
+                      </span>
+                      <span className="absolute -right-1 -bottom-1 rounded-full bg-white p-1 shadow">
+                        <PhoneCall className={`h-3 w-3 ${worker.accent}`} />
+                      </span>
+                      <motion.span
+                        className="absolute -left-2 -bottom-2 text-lg"
+                        animate={{ rotate: [0, 12, -12, 0] }}
+                        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        🧱
+                      </motion.span>
+                    </motion.div>
+                  ))}
+
+                {/* 工作日模式：在家的成员 */}
+                {!workStatus.isWeekend && workStatus.homeMembers && workStatus.homeMembers.length > 0 &&
+                  workStatus.homeMembers.map((member, index) => (
                     <motion.div
                       key={member.key}
                       className="relative flex flex-col items-center"
-                      animate={{ scale: [1, 1.05, 1] }}
+                      animate={{ scale: [1, 1.03, 1] }}
                       transition={{
                         duration: 2,
                         repeat: Infinity,
                         ease: "easeInOut",
-                        delay: index * 0.3,
+                        delay: index * 0.2,
                       }}
                     >
-                      <motion.div
-                        className="relative"
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: index * 0.2,
-                        }}
-                      >
-                        <img
-                          src={member.avatar}
-                          alt={`${member.name} at home`}
-                          className="h-12 w-12 rounded-full object-cover shadow-md ring-2 ring-pink-200"
-                        />
-                        <motion.span
-                          className="absolute -right-1 -top-1 text-sm"
-                          animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-                          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          💕
-                        </motion.span>
-                      </motion.div>
+                      <img
+                        src={member.avatar}
+                        alt={`${member.name} at home`}
+                        className="h-12 w-12 rounded-full object-cover shadow-md opacity-90"
+                      />
                       <span className="mt-1 text-[10px] font-medium text-foreground/80">
                         {member.name}
                       </span>
+                      <motion.span
+                        className="absolute -right-1 -bottom-1 text-sm"
+                        animate={{ y: [0, -2, 0] }}
+                        transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        🏠
+                      </motion.span>
                     </motion.div>
                   ))}
-                  <motion.div
-                    className="flex flex-col items-center gap-1"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <motion.span
-                      className="text-2xl"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      🏡
-                    </motion.span>
-                    <span className="text-[10px] text-pink-500 font-medium">在家</span>
-                  </motion.div>
-                </div>
-              )}
 
-              {/* 工作日模式：上班中的成员 */}
-              {!workStatus.isWeekend && workStatus.activeWorkers.length > 0 && (
-                workStatus.activeWorkers.map((worker, index) => (
-                  <motion.div
-                    key={worker.key}
-                    className="relative flex flex-col items-center"
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{
-                      duration: 1.8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.2,
-                    }}
-                  >
-                    <img
-                      src={worker.avatar}
-                      alt={`${worker.name} working`}
-                      className="h-12 w-12 rounded-full object-cover shadow-md"
-                    />
-                    <span className="mt-1 text-[10px] font-medium text-foreground/80">
-                      {worker.name}
+                {/* 如果没有任何人的数据（异常情况） */}
+                {!workStatus.isWeekend &&
+                  workStatus.activeWorkers.length === 0 &&
+                  (!workStatus.homeMembers || workStatus.homeMembers.length === 0) && (
+                    <span className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+                      休息中
                     </span>
-                    <span className="absolute -right-1 -bottom-1 rounded-full bg-white p-1 shadow">
-                      <PhoneCall className={`h-3 w-3 ${worker.accent}`} />
-                    </span>
-                    <motion.span
-                      className="absolute -left-2 -bottom-2 text-lg"
-                      animate={{ rotate: [0, 12, -12, 0] }}
-                      transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      🧱
-                    </motion.span>
-                  </motion.div>
-                ))
-              )}
-
-              {/* 工作日模式：在家的成员 */}
-              {!workStatus.isWeekend && workStatus.homeMembers && workStatus.homeMembers.length > 0 && (
-                workStatus.homeMembers.map((member, index) => (
-                  <motion.div
-                    key={member.key}
-                    className="relative flex flex-col items-center"
-                    animate={{ scale: [1, 1.03, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.2,
-                    }}
-                  >
-                    <img
-                      src={member.avatar}
-                      alt={`${member.name} at home`}
-                      className="h-12 w-12 rounded-full object-cover shadow-md opacity-90"
-                    />
-                    <span className="mt-1 text-[10px] font-medium text-foreground/80">
-                      {member.name}
-                    </span>
-                    <motion.span
-                      className="absolute -right-1 -bottom-1 text-sm"
-                      animate={{ y: [0, -2, 0] }}
-                      transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      🏠
-                    </motion.span>
-                  </motion.div>
-                ))
-              )}
-
-              {/* 如果没有任何人的数据（异常情况） */}
-              {!workStatus.isWeekend &&
-                workStatus.activeWorkers.length === 0 &&
-                (!workStatus.homeMembers || workStatus.homeMembers.length === 0) && (
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
-                    休息中
+                  )}
+              </div>
+            </div>
+          </div>
+        ) : null}
+        {showCat ? (
+          <div className="rounded-2xl border border-secondary/20 bg-white/70 px-4 py-3 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground/90">猫咪状态流转</p>
+                <p className="text-xs text-muted-foreground">现在：{catStatus.text}</p>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                <motion.span
+                  className="inline-flex"
+                  animate={{ rotate: [-6, 8, -6], y: [0, -3, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <PawPrint className={`h-4 w-4 ${catStatus.tone}`} />
+                </motion.span>
+                <motion.span
+                  className="text-base"
+                  animate={{ scale: [1, 1.15, 1] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  {catStatus.icon}
+                </motion.span>
+              </div>
+            </div>
+            <div className="mt-3 space-y-2">
+              {catSchedule.map((status, index) => (
+                <motion.div
+                  key={status.time}
+                  className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs ${status.key === catStatus.key
+                    ? "bg-primary/10 text-foreground shadow-sm"
+                    : "bg-white/80 text-muted-foreground"
+                    }`}
+                  animate={
+                    status.key === catStatus.key
+                      ? { y: [0, -2, 0], boxShadow: "0 8px 20px rgba(249, 115, 22, 0.15)" }
+                      : { y: 0, boxShadow: "0 0 0 rgba(0,0,0,0)" }
+                  }
+                  transition={{
+                    duration: 1.6,
+                    repeat: status.key === catStatus.key ? Infinity : 0,
+                    ease: "easeInOut",
+                    delay: index * 0.05,
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{status.icon}</span>
+                    <span className="font-semibold text-foreground/80">{status.title}</span>
+                  </div>
+                  <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary/80">
+                    {status.time}
                   </span>
-                )}
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
-        <div className="mb-4 rounded-2xl border border-secondary/20 bg-white/70 px-4 py-3 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-foreground/90">猫咪状态流转</p>
-              <p className="text-xs text-muted-foreground">现在：{catStatus.text}</p>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-              <motion.span
-                className="inline-flex"
-                animate={{ rotate: [-6, 8, -6], y: [0, -3, 0] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <PawPrint className={`h-4 w-4 ${catStatus.tone}`} />
-              </motion.span>
-              <motion.span
-                className="text-base"
-                animate={{ scale: [1, 1.15, 1] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                {catStatus.icon}
-              </motion.span>
-            </div>
-          </div>
-          <div className="mt-3 space-y-2">
-            {catSchedule.map((status, index) => (
-              <motion.div
-                key={status.time}
-                className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs ${status.key === catStatus.key
-                  ? "bg-primary/10 text-foreground shadow-sm"
-                  : "bg-white/80 text-muted-foreground"
-                  }`}
-                animate={
-                  status.key === catStatus.key
-                    ? { y: [0, -2, 0], boxShadow: "0 8px 20px rgba(249, 115, 22, 0.15)" }
-                    : { y: 0, boxShadow: "0 0 0 rgba(0,0,0,0)" }
-                }
-                transition={{
-                  duration: 1.6,
-                  repeat: status.key === catStatus.key ? Infinity : 0,
-                  ease: "easeInOut",
-                  delay: index * 0.05,
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">{status.icon}</span>
-                  <span className="font-semibold text-foreground/80">{status.title}</span>
-                </div>
-                <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary/80">
-                  {status.time}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        ) : null}
       </CardContent>
     </Card>
   );

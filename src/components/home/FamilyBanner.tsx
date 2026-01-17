@@ -12,7 +12,7 @@
 import { motion } from "framer-motion";
 
 import heroImage from "@/assets/hero-anime.jpeg";
-import { getDaysTogether } from "@/lib/events";
+import { HomeDateTime } from "@/components/home/HomeDateTime";
 
 export function FamilyBanner() {
   return (
@@ -28,18 +28,9 @@ export function FamilyBanner() {
         alt="Secret Base"
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex flex-col justify-end p-6 md:p-8">
-        <div className="text-white drop-shadow-md">
-          <h2 className="text-2xl font-bold font-display flex items-center gap-2">
-            <span>两人两猫的奇妙冒险</span>
-            <span className="text-xs bg-primary px-2 py-0.5 rounded-full">
-              Lv.{Math.floor(getDaysTogether() / 365)}
-            </span>
-          </h2>
-          <p className="text-white/90 text-sm mt-1">
-            公会成员: Aokiba, 晓倩, 甜心(Mage), 蛋糕(Warrior)
-          </p>
-        </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+      <div className="absolute right-4 top-4 rounded-2xl bg-white/55 px-4 py-2 shadow-sm ring-1 ring-white/40 backdrop-blur-md">
+        <HomeDateTime />
       </div>
     </motion.section>
   );

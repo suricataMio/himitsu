@@ -6,7 +6,7 @@
  * - 疫苗和驱虫提醒概览
  * - 护理清单（称重、营养膏、指甲修剪）
  * - 甜心 & 蛋糕体重变化曲线图（使用 Recharts）
- * - 每日状态卡片（DailyStatus）：根据时间显示人员和猫咪状态
+ * - 每日状态卡片（DailyStatus）：根据时间显示猫咪状态
  */
 import { motion } from "framer-motion";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
@@ -99,21 +99,6 @@ export const catProfiles: Record<
   },
 };
 
-const statusToneStyles: Record<StatusTone, { badge: string; bar: string }> = {
-  ok: {
-    badge: "bg-emerald-100 text-emerald-700",
-    bar: "bg-emerald-400",
-  },
-  soon: {
-    badge: "bg-amber-100 text-amber-700",
-    bar: "bg-amber-400",
-  },
-  due: {
-    badge: "bg-rose-100 text-rose-700",
-    bar: "bg-rose-400",
-  },
-};
-
 interface CatCareDashboardProps {
   catId?: CatId;
 }
@@ -149,63 +134,33 @@ export function CatCareDashboard({ catId = "sweet" }: CatCareDashboardProps) {
         <div className="text-xs text-muted-foreground">数据更新：本周</div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-6">
         <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
-          <h4 className="text-sm font-bold text-foreground flex items-center justify-between">
-            <span>状态栏</span>
-            <span className="text-xs text-muted-foreground">提醒</span>
-          </h4>
-          <div className="mt-3 space-y-3 text-sm text-muted-foreground">
-            {cat.statusItems.map((item) => {
-              const tone = statusToneStyles[item.tone];
-              return (
-                <div key={`${cat.name}-${item.label}`} className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-foreground/80">{item.label}</span>
-                    <span className={`rounded-full px-2 py-0.5 font-semibold ${tone.badge}`}>
-                      {item.value}
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
-                    <div
-                      className={`h-full rounded-full ${tone.bar}`}
-                      style={{ width: `${Math.min(Math.max(item.progress, 0), 100)}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="md:col-span-2">
-          <div className="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-sm">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h4 className="text-sm font-bold text-foreground">{cat.name}体重变化曲线</h4>
-                <p className="text-xs text-muted-foreground">单位：kg，最近半年记录</p>
-              </div>
-              <div className="text-xs text-muted-foreground">趋势平稳更安心</div>
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h4 className="text-sm font-bold text-foreground">{cat.name}体重变化曲线</h4>
+              <p className="text-xs text-muted-foreground">单位：kg，最近半年记录</p>
             </div>
-            <ChartContainer className="mt-4 h-56 w-full" config={weightChartConfig}>
-              <LineChart data={weightData} margin={{ left: 0, right: 16, top: 8 }}>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value.toFixed(1)}`}
-                  domain={[3.8, 5.0]}
-                />
-                <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-                <ChartLegend content={<ChartLegendContent />} />
-                <Line dataKey={cat.lineKey} stroke={`var(--color-${cat.lineKey})`} strokeWidth={3} dot={false} />
-              </LineChart>
-            </ChartContainer>
+            <div className="text-xs text-muted-foreground">趋势平稳更安心</div>
           </div>
+          <ChartContainer className="mt-4 h-56 w-full" config={weightChartConfig}>
+            <LineChart data={weightData} margin={{ left: 0, right: 16, top: 8 }}>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `${value.toFixed(1)}`}
+                domain={[3.8, 5.0]}
+              />
+              <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Line dataKey={cat.lineKey} stroke={`var(--color-${cat.lineKey})`} strokeWidth={3} dot={false} />
+            </LineChart>
+          </ChartContainer>
         </div>
       </div>
-      <DailyStatus />
+      <DailyStatus variant="cat" />
     </motion.section>
   );
 }

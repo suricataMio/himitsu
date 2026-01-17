@@ -11,6 +11,7 @@ import { Link } from "wouter";
 
 import avatarCouple from "@/assets/avatar-couple.jpeg";
 import { AnniversaryDetails } from "@/components/anniversary/AnniversaryDetails";
+import { DailyStatus } from "@/components/home/DailyStatus";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -131,7 +132,6 @@ export default function MemberProfilePage({ params }: MemberProfilePageProps) {
                   <h1 className="text-3xl font-black text-foreground font-display">
                     {profile.name}
                   </h1>
-                  <p className="text-sm text-muted-foreground">{profile.role}</p>
                 </div>
               </div>
               <div className="text-sm text-muted-foreground">{profile.tagline}</div>
@@ -172,6 +172,8 @@ export default function MemberProfilePage({ params }: MemberProfilePageProps) {
 
             <AnniversaryDetails />
           </div>
+
+          <DailyStatus variant="work" />
         </div>
       </ScrollArea>
     </div>
