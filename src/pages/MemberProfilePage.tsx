@@ -3,17 +3,17 @@
  *
  * 点击首页成员头像后进入，展示生日与个人信息。
  */
-import { differenceInDays, format, isAfter, isSameDay, parseISO, startOfDay } from "date-fns";
+import { differenceInDays, format, isAfter, isSameDay, startOfDay } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { ArrowLeft, CalendarDays, Heart } from "lucide-react";
+import { ArrowLeft, CalendarDays } from "lucide-react";
 import { Lunar } from "lunar-javascript";
 import { Link } from "wouter";
 
 import avatarCouple from "@/assets/avatar-couple.jpeg";
+import { AnniversaryDetails } from "@/components/anniversary/AnniversaryDetails";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getDaysTogether } from "@/lib/events";
 
 type MemberId = "aokiba" | "xiaoqian";
 
@@ -101,8 +101,6 @@ export default function MemberProfilePage({ params }: MemberProfilePageProps) {
       : getNextLunarBirthday(profile.birthday.lunarMonth ?? 9, profile.birthday.lunarDay ?? 25);
 
   const daysUntilBirthday = differenceInDays(nextBirthday, today);
-  const daysTogether = getDaysTogether();
-  const anniversaryDate = parseISO("2021-01-01");
 
   return (
     <div className="min-h-screen bg-[#FFFDF7] pb-20 overflow-hidden">
@@ -172,27 +170,7 @@ export default function MemberProfilePage({ params }: MemberProfilePageProps) {
               </div>
             </section>
 
-            <section className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-sm border border-white/60">
-              <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-                <Heart className="h-4 w-4 text-rose-400" />
-                纪念时刻
-              </div>
-              <div className="mt-4 space-y-3 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <span>在一起天数</span>
-                  <span className="font-semibold text-foreground">{daysTogether} 天</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>纪念日</span>
-                  <span className="font-semibold text-foreground">
-                    {format(anniversaryDate, "yyyy年M月d日", { locale: zhCN })}
-                  </span>
-                </div>
-                <div className="rounded-2xl bg-primary/5 px-4 py-3 text-xs text-foreground/70">
-                  重要时刻都值得被认真记录，回到这里随时查看。
-                </div>
-              </div>
-            </section>
+            <AnniversaryDetails />
           </div>
         </div>
       </ScrollArea>
