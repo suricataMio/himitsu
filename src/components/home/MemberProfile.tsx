@@ -21,7 +21,7 @@ interface MemberProps {
   /** 成员名称 */
   name: string;
   /** 成员角色/职位 */
-  role: string;
+  role?: string;
   /** 头像图片路径 */
   imageSrc: string;
   /** 背景颜色类名（可选，默认为主题色） */
