@@ -49,7 +49,8 @@ function AppRouter() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
+      {/* The family dashboard is designed for the light palette; don't auto-switch it at night. */}
+      <ThemeProvider defaultTheme="light" autoTheme={false}>
         <TooltipProvider>
           <Toaster />
           <AppRouter />
