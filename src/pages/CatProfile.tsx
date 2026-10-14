@@ -6,9 +6,11 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 
-import { CatCareDashboard, catProfiles, type CatId } from "@/components/home/CatCareDashboard";
+import { CatCareDashboard, catProfiles } from "@/components/home/CatCareDashboard";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { catIdForRoute } from "@/lib/routeParams";
+import NotFound from "@/pages/NotFound";
 
 type CatProfileProps = {
   params?: {
@@ -18,7 +20,8 @@ type CatProfileProps = {
 
 export default function CatProfile({ params }: CatProfileProps) {
   const rawId = params?.catId;
-  const catId: CatId = rawId === "cake" ? "cake" : "sweet";
+  const catId = catIdForRoute(rawId);
+  if (!catId) return <NotFound />;
   const cat = catProfiles[catId];
 
   return (

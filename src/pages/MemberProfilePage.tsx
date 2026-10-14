@@ -15,6 +15,8 @@ import { DailyStatus } from "@/components/home/DailyStatus";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { memberIdForRoute } from "@/lib/routeParams";
+import NotFound from "@/pages/NotFound";
 
 type MemberId = "aokiba" | "xiaoqian";
 
@@ -92,7 +94,8 @@ function getNextLunarBirthday(lunarMonth: number, lunarDay: number) {
 
 export default function MemberProfilePage({ params }: MemberProfilePageProps) {
   const rawId = params?.memberId;
-  const memberId: MemberId = rawId === "aokiba" ? "aokiba" : "xiaoqian";
+  const memberId = memberIdForRoute(rawId);
+  if (!memberId) return <NotFound />;
   const profile = memberProfiles[memberId];
   const today = startOfDay(new Date());
 
