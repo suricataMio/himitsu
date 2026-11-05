@@ -10,7 +10,7 @@
  */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type FamilyEvent, getUpcomingEvents } from "@/lib/events";
-import { format } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { Cake, Calendar as CalendarIcon, Heart } from "lucide-react";
 
@@ -64,7 +64,7 @@ export function UpcomingEvents() {
               </div>
               {/* 倒计天数标签 */}
               <div className="text-xs font-medium text-primary/80 bg-primary/10 px-2 py-1 rounded-full">
-                {Math.ceil((event.date.getTime() - new Date().setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24))} 天后
+                {differenceInCalendarDays(event.date, new Date())} 天后
               </div>
             </div>
           ))}
