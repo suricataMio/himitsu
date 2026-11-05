@@ -4,14 +4,19 @@
  * 从首页的“纪念日”入口进入，展示纪念日相关信息。
  */
 import { ArrowLeft } from "lucide-react";
+import { useSyncExternalStore } from "react";
 import { Link } from "wouter";
 
 import { AnniversaryDetails } from "@/components/anniversary/AnniversaryDetails";
 import { BondAndEvents } from "@/components/home/BondAndEvents";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getLocalDay, subscribeToLocalDay } from "@/lib/localDay";
 
 export default function AnniversaryPage() {
+  // Refresh all date-derived children after midnight or resuming the page.
+  useSyncExternalStore(subscribeToLocalDay, getLocalDay, getLocalDay);
+
   return (
     <div className="min-h-screen bg-[#FFFDF7] pb-20 overflow-hidden">
       <HomeBackground />
