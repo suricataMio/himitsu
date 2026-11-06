@@ -7,6 +7,7 @@ import { differenceInDays, format, isAfter, isSameDay, startOfDay } from "date-f
 import { zhCN } from "date-fns/locale";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { Lunar } from "lunar-javascript";
+import { useSyncExternalStore } from "react";
 import { Link } from "wouter";
 
 import avatarCouple from "@/assets/avatar-couple.jpeg";
@@ -15,6 +16,7 @@ import { DailyStatus } from "@/components/home/DailyStatus";
 import { HomeBackground } from "@/components/home/HomeBackground";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getLocalDay, subscribeToLocalDay } from "@/lib/localDay";
 import { memberIdForRoute } from "@/lib/routeParams";
 import NotFound from "@/pages/NotFound";
 
@@ -93,6 +95,9 @@ function getNextLunarBirthday(lunarMonth: number, lunarDay: number) {
 }
 
 export default function MemberProfilePage({ params }: MemberProfilePageProps) {
+  // Refresh birthdays and anniversary totals after midnight or resuming the page.
+  useSyncExternalStore(subscribeToLocalDay, getLocalDay, getLocalDay);
+
   const rawId = params?.memberId;
   const memberId = memberIdForRoute(rawId);
   if (!memberId) return <NotFound />;
