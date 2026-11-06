@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { subscribeToCurrentTime } from "@/lib/currentTime";
 
 
 
@@ -72,10 +73,7 @@ export function DailyStatus({ variant = "both" }: DailyStatusProps) {
   const headerTitle =
     variant === "work" ? "工作状态" : variant === "cat" ? "猫咪状态" : "每日状态";
 
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 60 * 1000);
-    return () => clearInterval(timer);
-  }, []);
+  useEffect(() => subscribeToCurrentTime(setNow), []);
 
   const workStatus = useMemo(() => {
     const minutes = getMinutes(now);
