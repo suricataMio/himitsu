@@ -3,16 +3,12 @@ import { zhCN } from "date-fns/locale";
 import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { subscribeToCurrentTime } from "@/lib/currentTime";
+
 export function HomeDateTime() {
   const [now, setNow] = useState(() => new Date());
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(new Date());
-    }, 60 * 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  useEffect(() => subscribeToCurrentTime(setNow), []);
 
   return (
     <div className="text-sm text-muted-foreground text-right">
