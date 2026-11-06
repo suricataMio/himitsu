@@ -125,17 +125,18 @@ export function getEventsForYear(year: number): FamilyEvent[] {
  * @returns 从今天开始即将到来的事件数组
  */
 export function getUpcomingEvents(count: number = 5): FamilyEvent[] {
+  if (!Number.isFinite(count) || count < 1) return [];
+  const limit = Math.floor(count);
   const now = startOfDay(new Date());
   const currentYear = now.getFullYear();
-  
-  // 获取当年和下一年的事件，确保跨年时也能正确显示
-  let events = [
-      ...getEventsForYear(currentYear),
-      ...getEventsForYear(currentYear + 1)
-  ];
-  
-  // 过滤掉已过去的事件，保留今天及以后的事件
-  events = events.filter(e => isAfter(e.date, now) || isSameDay(e.date, now));
-  
-  return events.slice(0, count);
+  const events: FamilyEvent[] = [];
+
+  // 年末时下一年可能不足指定数量，继续读取后续年份。
+  for (let year = currentYear; events.length < limit; year += 1) {
+    events.push(...getEventsForYear(year).filter(
+      e => isAfter(e.date, now) || isSameDay(e.date, now),
+    ));
+  }
+
+  return events.slice(0, limit);
 }
