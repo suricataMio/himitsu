@@ -12,13 +12,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import catBlueRun from "@/assets/cat-blue-run.png";
 import catWhiteRun from "@/assets/cat-white-run.png";
 
+// Home remounts when returning from a profile or anniversary page. Welcome the
+// visitor once per document load, rather than blocking every return navigation.
+let hasShownWelcome = false;
+
 export function WelcomeAnimation() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(() => !hasShownWelcome);
 
   useEffect(() => {
+    if (!show) return;
+    hasShownWelcome = true;
     const timer = setTimeout(() => setShow(false), 4500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [show]);
 
   return (
     <AnimatePresence>
