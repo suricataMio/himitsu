@@ -39,6 +39,7 @@ export function WelcomeAnimation() {
             {/* 蓝猫（甜心）- 从左侧走来 */}
             <motion.img
               src={catBlueRun}
+              alt=""
               className="h-48 absolute bottom-4"
               initial={{ x: -600, opacity: 0, scale: 0.8 }}
               animate={{ x: -60, opacity: 1, scale: 1 }}
@@ -47,6 +48,7 @@ export function WelcomeAnimation() {
             {/* 白猫（蛋糕）- 从右侧走来 */}
             <motion.img
               src={catWhiteRun}
+              alt=""
               className="h-48 absolute bottom-20"
               initial={{ x: 600, opacity: 0, scale: 0.8 }}
               animate={{ x: 60, opacity: 1, scale: 1 }}
