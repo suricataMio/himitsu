@@ -7,7 +7,7 @@
  * - 动画持续4.5秒后自动消失
  */
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import catBlueRun from "@/assets/cat-blue-run.png";
 import catWhiteRun from "@/assets/cat-white-run.png";
@@ -17,11 +17,13 @@ import catWhiteRun from "@/assets/cat-white-run.png";
 let hasShownWelcome = false;
 
 export function WelcomeAnimation() {
-  const [show, setShow] = useState(() => !hasShownWelcome);
+  const shouldReduceMotion = useReducedMotion();
+  const [show, setShow] = useState(() => !hasShownWelcome && !shouldReduceMotion);
 
   useEffect(() => {
-    if (!show) return;
+    // A skipped welcome also counts as seen, so later navigation won't replay it.
     hasShownWelcome = true;
+    if (!show) return;
     const timer = setTimeout(() => setShow(false), 4500);
     return () => clearTimeout(timer);
   }, [show]);
