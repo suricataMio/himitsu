@@ -31,7 +31,7 @@ export function CatWeightCard({ name, latestWeight }: CatWeightCardProps) {
             <div>
               <p className="text-sm font-medium text-foreground/80">最近一次</p>
               <p className="text-xs text-muted-foreground">
-                今天 · {format(latestWeight.date, "yyyy年M月d日", { locale: zhCN })}
+                {format(latestWeight.date, "yyyy年M月d日", { locale: zhCN })}
               </p>
             </div>
             <div className="text-2xl font-black text-primary">
@@ -42,7 +42,7 @@ export function CatWeightCard({ name, latestWeight }: CatWeightCardProps) {
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            最近记录：{name}今天体重 {latestWeight.value}
+            最近记录：{name}体重 {latestWeight.value}
             {latestWeight.unit}，状态稳定。
           </p>
         </div>
