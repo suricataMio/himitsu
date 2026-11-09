@@ -6,10 +6,15 @@ import { Lunar } from "lunar-javascript";
 import { useEffect, useState } from "react";
 
 export function FamilyCalendar() {
-  // Always fixed to today
-  const [date] = useState<Date>(new Date());
+  // Keep the calendar date in sync while the app stays open across midnight.
+  const [date, setDate] = useState<Date>(() => new Date());
   const [events, setEvents] = useState<FamilyEvent[]>([]);
   const [lunarDate, setLunarDate] = useState<string>('');
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setDate(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const year = new Date().getFullYear();
